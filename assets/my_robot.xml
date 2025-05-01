@@ -1,0 +1,36 @@
+<mujoco model="my_robot">
+    <compiler angle="degree"/>
+    <!-- viscosity: global damping (like air resistance) -->
+    <option timestep="0.01" gravity="0 0 -9.8" viscosity="0.002" />
+
+    <worldbody>
+        <geom name="floor" type="plane" size="10 10  0.1" rgba="0.8 0.8 0.8 1"  pos="0 0 0" friction="100.0 0.005 0.0001" contype="1" conaffinity="1"/>
+        <body name="box" pos="0 0 0.1">
+            <!-- friction="sliding torsional1 torsional2"
+            sliding: resistance to translational sliding (like dry rubber)
+            torsional1, torsional2: friction against rotational movement (less common) -->
+            <geom type="box" size="0.05 0.05 0.05" rgba="0.8 0.3 0.3 1" mass="1.0" friction="1.0 0.005 0.0001" contype="1" conaffinity="1"/>
+            <joint name="slide" type="slide" axis="1 0 0" damping="0.0" frictionloss="0.0"/>
+            <!-- Child body: rotor attached to slider -->
+            <body name="rotor" pos="0 0 0.15"> <!-- offset relative to slider -->
+                <!-- damping: viscous resistance proportional to velocity
+                frictionloss: static Coulomb friction — acts like torque deadzone
+                No movement if torque < frictionloss × gear -->
+                <geom type="capsule" fromto="0 0 0 0.2 0 0" size="0.02" rgba="0.2 0.5 0.8 1" mass="0.01" />
+                <joint name="hinge" type="hinge" axis="0 0 1" damping="0.1" frictionloss="0.02"/>
+            </body>
+        </body>
+
+         <!-- Rotating arm (new)
+        <body name="rotor" pos="0.3 0 0.1">
+            <geom type="capsule" fromto="0 0 0 0.2 0 0" size="0.02" rgba="0.2 0.5 0.8 1"/>
+            <joint name="hinge" type="hinge" axis="0 0 1"/>
+        </body> -->
+    </worldbody>
+
+    <actuator>
+        <motor joint="slide" ctrlrange="-1 1" gear="20"/>
+        <motor joint="hinge" ctrlrange="-1 1" gear="10"/>
+    </actuator>
+</mujoco>
+    
