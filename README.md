@@ -74,3 +74,13 @@ python test_env.py
 python test_env_register.py
 ```
 
+## Q&A
+
+> 1. How can i use URDF model? 
+
+Convert URDF to MJCF with tool [urdf2mjcf](https://github.com/kscalelabs/urdf2mjcf?tab=readme-ov-file) then include the robot in your main xml
+
+```xml
+    <!-- Include your MJCF robot (probably inside a <worldbody>) (Make sure my_robot.xml has no <mujoco> header and there is only one <worldbody> in the final merged xml) -->
+    <include file="my_robot.xml"/>
+```
